@@ -7,6 +7,7 @@ namespace CastleGrimtol
   {
     public static void Main(string[] args)
     {
+      Console.Clear();
       System.Console.WriteLine($@"
                __________  ______     ______     _       __   ____                                              
               /_  __/ __ \/_  __/    /_  __/____(_)___ _/ /  / __ \____  ___                                    
@@ -22,6 +23,7 @@ namespace CastleGrimtol
             
             ");
       GameService gameservice = new GameService();
+      gameservice.Run();
     }
   }
 }

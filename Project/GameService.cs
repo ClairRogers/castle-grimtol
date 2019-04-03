@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using CastleGrimtol.Project.Interfaces;
 using CastleGrimtol.Project.Models;
@@ -51,6 +52,21 @@ namespace CastleGrimtol.Project
     public void Run()
     {
       Initialize();
+      System.Console.Write("Welcome, player to the Quivering Forest. What is your name? ");
+      string name = Console.ReadLine();
+      Player player = new Player(name);
+      System.Console.WriteLine($"{name}, the game is about to begin. Type (help) at any time for assistance. If you would like to leave the game, type (exit).");
+      Console.Write($@"Let the games begin.... 
+                      .
+                      .
+                      .
+                      .
+                      .
+                      .
+                      .
+                      .
+                      .");
+
     }
 
 
