@@ -32,20 +32,58 @@ namespace CastleGrimtol.Project.Models
       return (IRoom)this;
     }
 
-    public int Search(string search)
+    public int Search(string search, string room)
     {
-      if (search.ToLower() == "well" || search.ToLower() == "den" || search.ToLower() == "shelves")
+      if (room == "The Well")
       {
-        return 1;
+        if (search.ToLower() == "well")
+        {
+          return 1;
+        }
+        else if (search.ToLower() == "shed")
+        {
+          return 2;
+        }
+        else
+        {
+          return 3;
+        }
       }
-      else if (search.ToLower() == "house" || search.ToLower() == "roof" || search.ToLower() == "bones")
+      else if (room == "The Treehouse")
       {
-        return 2;
+        if (search.ToLower() == "shelves")
+        {
+          return 1;
+        }
+        else if (search.ToLower() == "roof")
+        {
+          return 2;
+        }
+        else
+        {
+          return 3;
+        }
+      }
+      else if (room == "The Fox Den")
+      {
+        if (search.ToLower() == "well")
+        {
+          return 1;
+        }
+        else if (search.ToLower() == "shed")
+        {
+          return 2;
+        }
+        else
+        {
+          return 3;
+        }
       }
       else
       {
         return 3;
       }
+
     }
 
 

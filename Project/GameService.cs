@@ -34,9 +34,9 @@ namespace CastleGrimtol.Project
       gate.AddExit("south", caves);
 
       //create items
-      Item yellow = new Item("Yellow Key", "A shiny yellow key with a topaz stone inlaid in the base.");
-      Item purple = new Item("Purple Key", "A violet-colored key with with an amethyst inlaid in the base.");
-      Item red = new Item("Red Key", "A rust-colored key with a ruby inlaid in the base.");
+      Item yellow = new Item("Yellow Key", "It's a shiny yellow key with a topaz stone inlaid in the base.");
+      Item purple = new Item("Purple Key", "It's a violet-colored key with with an amethyst inlaid in the base.");
+      Item red = new Item("Red Key", "It's a rust-colored key with a ruby inlaid in the base.");
 
       //add items
       foxden.AddItem(purple);
@@ -67,11 +67,11 @@ namespace CastleGrimtol.Project
                       .
                       .
                       .");
-      while (Running)
-      {
-        System.Console.WriteLine($@"
+      System.Console.WriteLine($@"
 {CurrentRoom.Name}:
 {CurrentRoom.Description}");
+      while (Running)
+      {
         Console.Write($@"
         What do you do?: ");
         string playerchoice = Console.ReadLine();
@@ -139,8 +139,16 @@ namespace CastleGrimtol.Project
 
     public void TakeItem(string itemName)
     {
-      //   string item = (Item)itemName;
-      //   CurrentPlayer.Inventory.Add(itemName);
+      if (itemName.ToLower() == CurrentRoom.Items[0].Name)
+      {
+        CurrentPlayer.Inventory.Add(CurrentRoom.Items[0]);
+        CurrentRoom.Items.Remove(CurrentRoom.Items[0]);
+        System.Console.WriteLine("Added item to inventory!");
+      }
+      else
+      {
+        System.Console.WriteLine("Cannot add that item.");
+      }
     }
 
     public void UseItem(Item itemName)
@@ -151,12 +159,26 @@ namespace CastleGrimtol.Project
     public void Go(string direction)
     {
       CurrentRoom = (Room)CurrentRoom.Travel(direction);
+      System.Console.WriteLine($@"
+{CurrentRoom.Name}:
+{CurrentRoom.Description}");
     }
     public void Search(string location)
     {
-      if (CurrentRoom.Search(location) == 1)
+      string room = CurrentRoom.Name;
+      if (CurrentRoom.Search(location, room) == 1 && CurrentRoom.Items.Count > 0)
       {
-
+        System.Console.WriteLine($@"
+You have uncovered a {CurrentRoom.Items[0].Name}! {CurrentRoom.Items[0].Description}");
+      }
+      else if (CurrentRoom.Search(location, room) == 2)
+      {
+        System.Console.WriteLine("Oh no! Wrong choice. You died!");
+        Running = false;
+      }
+      else
+      {
+        System.Console.WriteLine("Nothing there.");
       }
 
     }
@@ -178,7 +200,8 @@ namespace CastleGrimtol.Project
 
     public void Look()
     {
-      System.Console.WriteLine($@"{CurrentRoom.Name}:
+      System.Console.WriteLine($@"
+{CurrentRoom.Name}:
 {CurrentRoom.Description}");
     }
 
