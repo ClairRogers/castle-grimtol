@@ -23,7 +23,7 @@ namespace CastleGrimtol
             
             ");
       GameService gameservice = new GameService();
-      gameservice.Run();
+      gameservice.StartGame();
     }
   }
 }

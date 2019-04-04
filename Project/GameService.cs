@@ -11,11 +11,11 @@ namespace CastleGrimtol.Project
     public Player CurrentPlayer { get; set; }
     public bool Running { get; set; }
 
-    private void Initialize()
+    public void Setup()
     {
       //create all rooms
-      Room obelisk = new Room("The Obelisk", "desc");
-      Room well = new Room("The Well", "desc");
+      Room obelisk = new Room("The Obelisk", "You find yourself in a clearing. It is dark and stormy, and rain is falling. At the center of the clearing is a tall obelisk with strange, glowing carvings. To the north, you see the dark, yawning entrance to a cave. To the east, a lonely path that weaves into the trees. To the west, the trees appear to thin out. To the south, a stench makes your hair stand on end.");
+      Room well = new Room("The Well", "You come to a field where you see an old, dilapidated structure. On one side is a (shed), so old that it is decaying where it stands. It is dark and musty inside. Next to it is a (well). The water is dark and smells stale.");
       Room foxden = new Room("The Fox Den", "desc");
       Room treehouse = new Room("The Treehouse", "desc");
       Room caves = new Room("The Caves", "desc");
@@ -34,9 +34,9 @@ namespace CastleGrimtol.Project
       gate.AddExit("south", caves);
 
       //create items
-      Item yellow = new Item("Yellow Key", "desc");
-      Item purple = new Item("Purple Key", "desc");
-      Item red = new Item("Red Key", "desc");
+      Item yellow = new Item("Yellow Key", "A shiny yellow key with a topaz stone inlaid in the base.");
+      Item purple = new Item("Purple Key", "A violet-colored key with with an amethyst inlaid in the base.");
+      Item red = new Item("Red Key", "A rust-colored key with a ruby inlaid in the base.");
 
       //add items
       foxden.AddItem(purple);
@@ -47,11 +47,12 @@ namespace CastleGrimtol.Project
       Running = true;
 
 
+
     }
 
-    public void Run()
+    public void StartGame()
     {
-      Initialize();
+      Setup();
       System.Console.Write("Welcome, player to the Quivering Forest. What is your name? ");
       string name = Console.ReadLine();
       Player player = new Player(name);
@@ -66,7 +67,16 @@ namespace CastleGrimtol.Project
                       .
                       .
                       .");
-
+      while (Running)
+      {
+        System.Console.WriteLine($@"
+{CurrentRoom.Name}:
+{CurrentRoom.Description}");
+        Console.Write($@"
+        What do you do?: ");
+        string playerchoice = Console.ReadLine();
+        GetUserInput(playerchoice);
+      }
     }
 
 
@@ -74,59 +84,116 @@ namespace CastleGrimtol.Project
 
 
 
-    public void GetUserInput()
+    public void GetUserInput(string playerchoice)
+    {
+      string[] strArr = playerchoice.Split(" ");
+      if (strArr.Length < 2)
+      {
+        string choice = strArr[0].ToLower();
+        switch (choice)
+        {
+          case "help":
+            Help();
+            break;
+          case "quit":
+            Quit();
+            break;
+          case "restart":
+            Reset();
+            break;
+          case "look":
+            Look();
+            break;
+          case "inventory":
+            Inventory();
+            break;
+          default:
+            Console.WriteLine("Not a recognized command.");
+            break;
+        }
+      }
+      else
+      {
+        string action = strArr[0].ToLower();
+        string choice = strArr[1].ToLower();
+        switch (action)
+        {
+          case "go":
+            Go(choice);
+            break;
+          case "use":
+            //UseItem(choice);
+            break;
+          case "take":
+            TakeItem(choice);
+            break;
+          case "search":
+            Search(choice);
+            break;
+          default:
+            System.Console.WriteLine("Not a recognized command.");
+            break;
+        }
+      }
+    }
+
+    public void TakeItem(string itemName)
+    {
+      //   string item = (Item)itemName;
+      //   CurrentPlayer.Inventory.Add(itemName);
+    }
+
+    public void UseItem(Item itemName)
     {
 
     }
 
     public void Go(string direction)
     {
+      CurrentRoom = (Room)CurrentRoom.Travel(direction);
+    }
+    public void Search(string location)
+    {
+      if (CurrentRoom.Search(location) == 1)
+      {
+
+      }
 
     }
 
+
+
+
+
+
     public void Help()
     {
-
+      Console.WriteLine("(help) to open helpdesk. (quit) to quit game. (look) to view your surroundings. (inventory) to view your inventory.(go (direction)) to go somewhere. (use (item)) to use item. (take (item)) to take item. (search (location)) to search a location.");
     }
 
     public void Inventory()
     {
-
+      System.Console.WriteLine(CurrentPlayer.Inventory);
     }
 
     public void Look()
     {
-
+      System.Console.WriteLine($@"{CurrentRoom.Name}:
+{CurrentRoom.Description}");
     }
 
     public void Quit()
     {
-
+      System.Console.WriteLine("Goodbye!");
+      Running = false;
     }
 
     public void Reset()
     {
-
+      Running = false;
     }
 
-    public void Setup()
-    {
 
-    }
 
-    public void StartGame()
-    {
-
-    }
-
-    public void TakeItem(string itemName)
-    {
-
-    }
-
-    public void UseItem(string itemName)
-    {
-
-    }
   }
 }
