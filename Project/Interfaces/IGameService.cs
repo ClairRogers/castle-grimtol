@@ -40,7 +40,7 @@ namespace CastleGrimtol.Project.Interfaces
     //No need to Pass a room since Items can only be used in the CurrentRoom
     //Make sure you validate the item is in the room or player inventory before
     //being able to use the item
-    void UseItem(Item itemName);
+    void UseItem();
 
     //Print the list of items in the players inventory to the console
     void Inventory();

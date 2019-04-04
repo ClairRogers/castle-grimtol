@@ -110,6 +110,9 @@ namespace CastleGrimtol.Project
           case "inventory":
             Inventory();
             break;
+          case "use":
+            UseItem();
+            break;
           default:
             Console.WriteLine("Not a recognized command.");
             break;
@@ -123,9 +126,6 @@ namespace CastleGrimtol.Project
         {
           case "go":
             Go(choice);
-            break;
-          case "use":
-            //UseItem(choice);
             break;
           case "take":
             TakeItem(choice);
@@ -157,9 +157,41 @@ Cannot add that item.");
       }
     }
 
-    public void UseItem(Item itemName)
-    {
 
+    public void UseItem()
+    {
+      System.Console.WriteLine("Which item?");
+      int i = 1;
+      foreach (Item item in CurrentPlayer.Inventory)
+      {
+        System.Console.WriteLine($"({i}) {item.Name}: {item.Description}");
+        i++;
+      }
+      string num = Console.ReadLine();
+      if (CurrentRoom.Name == "The Gate")
+      {
+        int choice;
+        if (Int32.TryParse(num, out choice) && choice <= CurrentPlayer.Inventory.Count)
+        {
+
+          if (CurrentPlayer.Inventory[choice - 1].Name == "Yellow Key")
+          {
+            System.Console.WriteLine("You won!");
+          }
+          else
+          {
+            System.Console.WriteLine("Item has no effect.");
+          }
+        }
+        else
+        {
+          System.Console.WriteLine("No such item in your inventory.");
+        }
+      }
+      else
+      {
+        System.Console.WriteLine("Cannot use that here.");
+      }
     }
 
     public void Go(string direction)
@@ -203,14 +235,16 @@ Nothing there.");
     public void Help()
     {
       Console.WriteLine($@"
-(help) to open helpdesk. (quit) to quit game. (look) to view your surroundings. (inventory) to view your inventory.(go (direction)) to go somewhere. (use (item)) to use item. (take (item)) to take item. (search (location)) to search a location.");
+(help) to open helpdesk. (quit) to quit game. (look) to view your surroundings. (inventory) to view your inventory.(go (direction)) to go somewhere. (use) to use an item. (take (item)) to take item. (search (location)) to search a location.");
     }
 
     public void Inventory()
     {
+      int i = 1;
       foreach (Item item in CurrentPlayer.Inventory)
       {
-        System.Console.WriteLine($"{item.Name}: {item.Description}");
+        System.Console.WriteLine($"({i}) {item.Name}: {item.Description}");
+        i++;
       }
     }
 
