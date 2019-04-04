@@ -66,11 +66,11 @@ namespace CastleGrimtol.Project.Models
       }
       else if (room == "The Fox Den")
       {
-        if (search.ToLower() == "well")
+        if (search.ToLower() == "bones")
         {
           return 1;
         }
-        else if (search.ToLower() == "shed")
+        else if (search.ToLower() == "den")
         {
           return 2;
         }

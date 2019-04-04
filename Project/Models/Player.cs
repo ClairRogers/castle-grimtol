@@ -8,7 +8,10 @@ namespace CastleGrimtol.Project.Models
     public string PlayerName { get; set; }
     public List<Item> Inventory { get; set; }
 
-
+    public void AddItem(Item item)
+    {
+      Inventory.Add(item);
+    }
 
     public Player(string name)
     {

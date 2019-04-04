@@ -15,11 +15,11 @@ namespace CastleGrimtol.Project
     {
       //create all rooms
       Room obelisk = new Room("The Obelisk", "You find yourself in a clearing. It is dark and stormy, and rain is falling. At the center of the clearing is a tall obelisk with strange, glowing carvings. To the north, you see the dark, yawning entrance to a cave. To the east, a lonely path that weaves into the trees. To the west, the trees appear to thin out. To the south, a stench makes your hair stand on end.");
-      Room well = new Room("The Well", "You come to a field where you see an old, dilapidated structure. On one side is a (shed), so old that it is decaying where it stands. It is dark and musty inside. Next to it is a (well). The water is dark and smells stale.");
-      Room foxden = new Room("The Fox Den", "desc");
-      Room treehouse = new Room("The Treehouse", "desc");
-      Room caves = new Room("The Caves", "desc");
-      Room gate = new Room("The Gate", "desc");
+      Room well = new Room("The Well", "You come to a field where you see an old, dilapidated structure. On one side is a (shed), so old that it is decaying where it stands. It is dark and musty inside. Next to it is a (well). The water is dark and smells stale. To the east, the Obelisk stands in the distance.");
+      Room foxden = new Room("The Fox Den", "The closer you get, the more strong the stench becomes. You find a small clearing with that contains a fox (den), and right outside, a pile of discarded prey (bones). The smell is very strong, and you think the animal must be nearby. To the north, the Obelisk stands in the distance.");
+      Room treehouse = new Room("The Treehouse", "The forest seems to get darker back here. Eventually, you happen upon a giant oak tree, and in the branches, an abandoned treehouse. You climb into the rickety structure. Inside there are some (shelves) on the back wall, and a ladder that leads to the (roof). To the west, the Obelisk stands in the distance.");
+      Room caves = new Room("The Caves", "Inside the caves, it is quieter than the storms outside. There are several tunnels. In the ones to the west, eeries sounds echo... sounds that make your skin crawl. To the north, a tunnel leads deeper into the catacombs. To the south, you can hear the rain pattering outside.");
+      Room gate = new Room("The Gate", "You emerge into a giant cavern, so tall you cannot see the ceiling. Here, you see a giant, ornate gate set into the stone walls. It is glowing slightly, but if you try to open it, it doesn't budge.");
 
       //add exits
       obelisk.AddExit("south", foxden);
@@ -34,9 +34,9 @@ namespace CastleGrimtol.Project
       gate.AddExit("south", caves);
 
       //create items
-      Item yellow = new Item("Yellow Key", "It's a shiny yellow key with a topaz stone inlaid in the base.");
-      Item purple = new Item("Purple Key", "It's a violet-colored key with with an amethyst inlaid in the base.");
-      Item red = new Item("Red Key", "It's a rust-colored key with a ruby inlaid in the base.");
+      Item yellow = new Item("Yellow Key", "It's a shiny (yellow) key with a topaz stone inlaid in the base.");
+      Item purple = new Item("Purple Key", "It's a pretty (purple) key with with an amethyst inlaid in the base.");
+      Item red = new Item("Red Key", "It's a dark (red) key with a ruby inlaid in the base.");
 
       //add items
       foxden.AddItem(purple);
@@ -50,12 +50,15 @@ namespace CastleGrimtol.Project
 
     }
 
+
+
+
     public void StartGame()
     {
       Setup();
       System.Console.Write("Welcome, player to the Quivering Forest. What is your name? ");
       string name = Console.ReadLine();
-      Player player = new Player(name);
+      CurrentPlayer = new Player(name);
       System.Console.WriteLine($"{name}, the game is about to begin. Type (help) at any time for assistance. If you would like to leave the game, type (exit).");
       Console.Write($@"Let the games begin.... 
                       .
@@ -139,15 +142,18 @@ namespace CastleGrimtol.Project
 
     public void TakeItem(string itemName)
     {
-      if (itemName.ToLower() == CurrentRoom.Items[0].Name)
+      if (CurrentRoom.Items.Count > 0 && (itemName + " key") == CurrentRoom.Items[0].Name.ToLower())
       {
-        CurrentPlayer.Inventory.Add(CurrentRoom.Items[0]);
+        CurrentPlayer.AddItem(CurrentRoom.Items[0]);
+        //CurrentPlayer.Inventory.Add();
         CurrentRoom.Items.Remove(CurrentRoom.Items[0]);
-        System.Console.WriteLine("Added item to inventory!");
+        System.Console.WriteLine($@"
+Added item to inventory!");
       }
       else
       {
-        System.Console.WriteLine("Cannot add that item.");
+        System.Console.WriteLine($@"
+Cannot add that item.");
       }
     }
 
@@ -163,6 +169,10 @@ namespace CastleGrimtol.Project
 {CurrentRoom.Name}:
 {CurrentRoom.Description}");
     }
+
+
+
+
     public void Search(string location)
     {
       string room = CurrentRoom.Name;
@@ -173,12 +183,14 @@ You have uncovered a {CurrentRoom.Items[0].Name}! {CurrentRoom.Items[0].Descript
       }
       else if (CurrentRoom.Search(location, room) == 2)
       {
-        System.Console.WriteLine("Oh no! Wrong choice. You died!");
+        System.Console.WriteLine($@"
+Oh no! Wrong choice. You died!");
         Running = false;
       }
       else
       {
-        System.Console.WriteLine("Nothing there.");
+        System.Console.WriteLine($@"
+Nothing there.");
       }
 
     }
@@ -190,12 +202,16 @@ You have uncovered a {CurrentRoom.Items[0].Name}! {CurrentRoom.Items[0].Descript
 
     public void Help()
     {
-      Console.WriteLine("(help) to open helpdesk. (quit) to quit game. (look) to view your surroundings. (inventory) to view your inventory.(go (direction)) to go somewhere. (use (item)) to use item. (take (item)) to take item. (search (location)) to search a location.");
+      Console.WriteLine($@"
+(help) to open helpdesk. (quit) to quit game. (look) to view your surroundings. (inventory) to view your inventory.(go (direction)) to go somewhere. (use (item)) to use item. (take (item)) to take item. (search (location)) to search a location.");
     }
 
     public void Inventory()
     {
-      System.Console.WriteLine(CurrentPlayer.Inventory);
+      foreach (Item item in CurrentPlayer.Inventory)
+      {
+        System.Console.WriteLine($"{item.Name}: {item.Description}");
+      }
     }
 
     public void Look()
@@ -207,13 +223,14 @@ You have uncovered a {CurrentRoom.Items[0].Name}! {CurrentRoom.Items[0].Descript
 
     public void Quit()
     {
-      System.Console.WriteLine("Goodbye!");
+      System.Console.WriteLine($@"
+Goodbye!");
       Running = false;
     }
 
     public void Reset()
     {
-      Running = false;
+
     }
 
 
