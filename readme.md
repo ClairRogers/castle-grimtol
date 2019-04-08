@@ -1,3 +1,25 @@
+## How to Survive:
+
+Hello! Figure I'd give you the trick on how to get through this so you don't keep dying from drowning/searching the wrong locations:
+
+  - Go west
+  - Search well
+  - Take yellow (unfortunately you can't just say 'take key'... it's a feature, not a bug!)
+  - Go east
+  - Go north
+  - Go north
+  - Use
+  - 1
+  - You win!
+
+Enjoy!
+
+-Clair
+
+
+----------------------------------------------------------
+
+
 # Console Game Checkpoint
 
 ### The Setup
