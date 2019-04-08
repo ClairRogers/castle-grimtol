@@ -11,6 +11,8 @@ namespace CastleGrimtol.Project
     public Player CurrentPlayer { get; set; }
     public bool Running { get; set; }
 
+    public int Rain { get; set; }
+
     public void Setup()
     {
       //create all rooms
@@ -45,6 +47,7 @@ namespace CastleGrimtol.Project
 
       CurrentRoom = obelisk;
       Running = true;
+      Rain = 0;
 
 
 
@@ -69,16 +72,29 @@ namespace CastleGrimtol.Project
                       .
                       .
                       .
-                      .");
+                      .
+You come to consciousness slowly, and when you do, you smell the rain and cool air and feel droplets hitting your pelt. You open your eyes and stand. You have taken on the form of a cat--ears, whiskers and all. The forest you are in is stormy and dark, with rain falling heavily. You notice that, even as you watch, water is pooling on the ground rapidly, inching up your paws. You must go, quickly.
+");
       System.Console.WriteLine($@"
 {CurrentRoom.Name}:
 {CurrentRoom.Description}");
       while (Running)
       {
-        Console.Write($@"
-        What do you do?: ");
-        string playerchoice = Console.ReadLine();
-        GetUserInput(playerchoice);
+        System.Console.WriteLine($@"
+        Rain level: {Rain} inches");
+        if (Rain >= 15)
+        {
+          System.Console.WriteLine($@"
+        The water level is too high for your tiny frame, and you drown. Game over!");
+          Running = false;
+        }
+        else
+        {
+          Console.Write($@"        What do you do?: ");
+          string playerchoice = Console.ReadLine();
+          Rain++;
+          GetUserInput(playerchoice);
+        }
       }
     }
 
@@ -160,46 +176,82 @@ Cannot add that item.");
 
     public void UseItem()
     {
-      System.Console.WriteLine("Which item?");
-      int i = 1;
-      foreach (Item item in CurrentPlayer.Inventory)
+      if (CurrentPlayer.Inventory.Count > 0)
       {
-        System.Console.WriteLine($"({i}) {item.Name}: {item.Description}");
-        i++;
-      }
-      string num = Console.ReadLine();
-      if (CurrentRoom.Name == "The Gate")
-      {
-        int choice;
-        if (Int32.TryParse(num, out choice) && choice <= CurrentPlayer.Inventory.Count)
+        System.Console.WriteLine("Which item?");
+        int i = 1;
+        foreach (Item item in CurrentPlayer.Inventory)
         {
-
-          if (CurrentPlayer.Inventory[choice - 1].Name == "Yellow Key")
+          System.Console.WriteLine($"({i}) {item.Name}: {item.Description}");
+          i++;
+        }
+        string num = Console.ReadLine();
+        if (CurrentRoom.Name == "The Gate")
+        {
+          int choice;
+          if (Int32.TryParse(num, out choice) && choice <= CurrentPlayer.Inventory.Count)
           {
-            System.Console.WriteLine("You won!");
+
+            if (CurrentPlayer.Inventory[choice - 1].Name == "Yellow Key")
+            {
+              System.Console.WriteLine($@"
+
+        The gate unlocks... you step through.
+
+ __     __            __          __ _         _ 
+ \ \   / /            \ \        / /(_)       | |
+  \ \_/ /___   _   _   \ \  /\  / /  _  _ __  | |
+   \   // _ \ | | | |   \ \/  \/ /  | || '_ \ | |
+    | || (_) || |_| |    \  /\  /   | || | | ||_|
+    |_| \___/  \__,_|     \/  \/    |_||_| |_|(_)
+                                                 
+        Congratulatons, {CurrentPlayer.PlayerName}!
+                 ");
+              Running = false;
+            }
+            else
+            {
+              System.Console.WriteLine($@"
+Item has no effect.");
+            }
           }
           else
           {
-            System.Console.WriteLine("Item has no effect.");
+            System.Console.WriteLine($@"
+No such item in your inventory.");
           }
         }
         else
         {
-          System.Console.WriteLine("No such item in your inventory.");
+          System.Console.WriteLine($@"
+Cannot use that here.");
         }
       }
       else
       {
-        System.Console.WriteLine("Cannot use that here.");
+        System.Console.WriteLine($@"
+You don't have any items to use.");
       }
     }
 
+
+
     public void Go(string direction)
     {
-      CurrentRoom = (Room)CurrentRoom.Travel(direction);
-      System.Console.WriteLine($@"
+      if (CurrentRoom.Name == "The Caves" && direction == "west")
+      {
+        System.Console.WriteLine($@"
+        You go to the west, and the sounds get louder. As you turn the corner, you see a horrendous monster--a giant, disfigured spider with multiple heads sprouting from its body: a goat, a dog, a snake. It spots you immediately, and before you can run, it attacks. You die before you even have a chance to fully realize your mistake.
+        GAME OVER.");
+        Running = false;
+      }
+      else
+      {
+        CurrentRoom = (Room)CurrentRoom.Travel(direction);
+        System.Console.WriteLine($@"
 {CurrentRoom.Name}:
 {CurrentRoom.Description}");
+      }
     }
 
 
@@ -211,20 +263,43 @@ Cannot add that item.");
       if (CurrentRoom.Search(location, room) == 1 && CurrentRoom.Items.Count > 0)
       {
         System.Console.WriteLine($@"
-You have uncovered a {CurrentRoom.Items[0].Name}! {CurrentRoom.Items[0].Description}");
+You have spotted a {CurrentRoom.Items[0].Name}! {CurrentRoom.Items[0].Description}
+          .---.
+         / /\ |\________________
+        | (  )| ________   _   _|
+         \ \/ |/        |_| | |
+          `---'             |_|
+  ");
       }
       else if (CurrentRoom.Search(location, room) == 2)
       {
-        System.Console.WriteLine($@"
-Oh no! Wrong choice. You died!");
-        Running = false;
+        if (CurrentRoom.Name == "The Well")
+        {
+          System.Console.WriteLine($@"
+You creep your way into the shed. You begin rooting around, but when you push aside an overturned bucket, a rattlesnake is waiting for you! He strikes, and you cannot get away.
+You have died!");
+          Running = false;
+        }
+        else if (CurrentRoom.Name == "The Fox Den")
+        {
+          System.Console.WriteLine($@"
+You approach the den, but the smell only grows stronger. You realize this is a mistake, but before you have the chance to turn around, a fox leaps forward and attacks you!
+You have died!");
+          Running = false;
+        }
+        else
+        {
+          System.Console.WriteLine($@"
+You climb up the stair and onto the roof. Unfortunately, the roof is incredibly slick from the rain. You lose your footing, and plummet from the treehouse.
+You have died!");
+          Running = false;
+        }
       }
       else
       {
         System.Console.WriteLine($@"
 Nothing there.");
       }
-
     }
 
 
@@ -235,7 +310,15 @@ Nothing there.");
     public void Help()
     {
       Console.WriteLine($@"
-(help) to open helpdesk. (quit) to quit game. (look) to view your surroundings. (inventory) to view your inventory.(go (direction)) to go somewhere. (use) to use an item. (take (item)) to take item. (search (location)) to search a location.");
+(help) to open helpdesk. 
+(quit) to quit game. 
+(restart) to reset the game. 
+(look) to view your surroundings. 
+(inventory) to view your inventory.
+(go (direction)) to go somewhere. 
+(search (location)) to search a location.
+(take (item)) to take item. 
+(use) to use an item.");
     }
 
     public void Inventory()
@@ -264,7 +347,8 @@ Goodbye!");
 
     public void Reset()
     {
-
+      Console.Clear();
+      StartGame();
     }
 
 

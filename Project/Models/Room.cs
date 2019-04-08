@@ -28,7 +28,8 @@ namespace CastleGrimtol.Project.Models
       {
         return Exits[direction];
       }
-      System.Console.WriteLine("There's nothing there!");
+      System.Console.WriteLine($@"
+There's nothing there!");
       return (IRoom)this;
     }
 
@@ -87,6 +88,8 @@ namespace CastleGrimtol.Project.Models
     }
 
 
+
+
     public Room(string name, string desc)
     {
       Exits = new Dictionary<string, IRoom>();
@@ -95,14 +98,5 @@ namespace CastleGrimtol.Project.Models
       Description = desc;
 
     }
-
-
-    // public enum Direction
-    // {
-    //   north,
-    //   south,
-    //   east,
-    //   west
-    // }
   }
 }
